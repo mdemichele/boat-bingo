@@ -1,0 +1,136 @@
+/* Lato font */
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;1,700&display=swap');
+
+/* Body Wide Styles */
+body {
+  margin: 0;
+  background: #5D7BEA;
+  font-family: 'Lato', serif;
+  color: #E6E6E6;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  width: 100%;
+}
+
+/* Title Styles */
+.page-title-container {
+}
+
+.page-title {
+  font-size: 64px;
+  text-transform: uppercase;
+  font-weight: 700;
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 0;
+}
+
+.page-subtitle {
+  font-size: 18px;
+  font-weight: 300;
+  letter-spacing: 1px;
+  margin: 0;
+  padding: 0;
+}
+
+/* Form Styles */
+.question-form-container {
+}
+
+#question-form {
+  width: 50%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-label {
+  width: 100%;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 300;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.form-line {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.form-input {
+  width: 75%;
+  background: none;
+  border: 0.5px solid white;
+  border-radius: none;
+  height: 20px;
+  padding: 10px;
+  color: white;
+  font-size: 16px;
+}
+
+.form-submit {
+  width: 20%;
+  background: none;
+  border: 0.5px solid white;
+  color: white;
+}
+
+.form-submit:hover {
+  background: white;
+  color: black;
+}
+
+/* Refresh Board Bar */
+.refresh-board-button {
+  padding: 10px 30px;
+  background: none;
+  border: 1px solid red;
+  color: red;
+  font-size: 16px;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* Board Section */
+.bingo-board-container {
+  width: 100%;
+}
+
+.bingo-row {
+  width: 90%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.bingo-square {
+  width: 16%;
+  height: 200px;
+  border: 1px solid #15289B;
+  background: white;
+  color: black;
+  font-size: 16px;
+  font-weight: 400;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* Clicked Style */
+.clicked {
+  background: black;
+  color: white;
+}
