@@ -56,10 +56,15 @@ body {
 .form-label {
   width: 100%;
   text-align: center;
+  color: white;
   font-size: 18px;
   font-weight: 300;
   letter-spacing: 1px;
   margin-bottom: 10px;
+}
+
+::placeholder {
+  color: white;
 }
 
 .form-line {
