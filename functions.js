@@ -144,6 +144,6 @@ let classicBoard = [
   "*Bratty kid says something snarky*",
   "Where are we snorkeling today?",
   "*Someone mispronounces Hawaiian word*",
-  "*Old person almost eats shit*"
+  "*Old person eats shit*"
 ]
 
