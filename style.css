@@ -126,10 +126,11 @@ body {
   border: 1px solid #15289B;
   background: white;
   color: black;
-  font-size: 16px;
-  font-weight: 400;
+  font-size: 28px;
+  font-weight: 700;
   display: flex;
   justify-content: center;
+  text-align: center;
   align-items: center;
   cursor: pointer;
 }
