@@ -1,10 +1,11 @@
 /**
- * Event Handler Definitions
+ * EVENT HANDLERS
  */
+
 // Clear Board Function 
 const refreshButton = document.querySelector("#refresh");
 refreshButton.addEventListener("click", (event) => {
-  localStorage.clear();
+  clearBoard();
   location.reload();
 });
 
@@ -38,6 +39,14 @@ questionForm.addEventListener("submit", (event) => {
   location.reload();
 });
 
+
+/** FUNCTIONS  */
+
+// Clears the board
+function clearBoard() {
+  localStorage.clear();
+}
+
 // Handles Bingo Square change when a user clicks 
 function handleClick(event) {
   // Add or remove a square selection
@@ -54,9 +63,6 @@ function handleClick(event) {
   checkForWinningDiagonal(event);
 }
 
-function clearBoard() {
-  localStorage.clear();
-}
 
 function saveQuestion(question) {
   let currentBoard = JSON.parse(localStorage.getItem("currentBoard"));
