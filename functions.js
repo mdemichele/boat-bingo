@@ -4,10 +4,7 @@
 
 // Clear Board Function 
 const refreshButton = document.querySelector("#refresh");
-refreshButton.addEventListener("click", (event) => {
-  clearBoard();
-  location.reload();
-});
+refreshButton.addEventListener("click", handleRefreshButton);
 
 // Fill Board with classic questions
 const classicButton = document.querySelector("#classic-mode");
@@ -42,9 +39,17 @@ questionForm.addEventListener("submit", (event) => {
 
 /** FUNCTIONS  */
 
-// Clears the board
 function clearBoard() {
   localStorage.clear();
+}
+
+function reloadWindow() {
+  location.reload();
+}
+
+function handleRefreshButton() {
+  clearBoard();
+  reloadWindow();
 }
 
 // Handles Bingo Square change when a user clicks 
