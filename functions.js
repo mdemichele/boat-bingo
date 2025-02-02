@@ -31,6 +31,8 @@ function handlePlayClassicBoardButton() {
   for (var i = 0; i < classicBoard.length; i++) {
     saveQuestion(classicBoard[i]);
   }
+
+  populateEntireBoard();
 }
 
 function handleQuestionFormSubmit(event) {
