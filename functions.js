@@ -30,7 +30,8 @@ function handlePlayClassicBoardButton() {
   for (var i = 0; i < classicBoard.length; i++) {
     saveQuestion(classicBoard[i]);
   }
-
+  
+  initializeGameState();
   populateEntireBoard();
 }
 
@@ -62,11 +63,13 @@ function handleClick(event) {
   else bingoSquare.classList.add("clicked");
 
   let bingoSquareId = bingoSquare.id.split("-")[1];
+  addToGameState(bingoSquareId);
 
+  let isWinningRow = checkForWinningRow(bingoSquareId);
+  console.log(isWinningRow);
 
-  checkForWinningRow(bingoSquare);
-  checkForWinningColumn(bingoSquare);
-  checkForWinningDiagonal(bingoSquare);
+  checkForWinningColumn(bingoSquareId);
+  checkForWinningDiagonal(bingoSquareId);
 }
 
 
@@ -105,7 +108,7 @@ function populateEntireBoard() {
 function initializeGameState() {
   if (localStorage.getItem("boardState") == null) {
     let initialBoardState = JSON.stringify([false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]);
-    localStorage.setItem("boardState", initialBoardStateString);
+    localStorage.setItem("boardState", initialBoardState);
   }
 }
 
@@ -117,21 +120,44 @@ function getGameState() {
   }
 }
 
+function addToGameState(squareId) {
+  if (localStorage.getItem("boardState") != null) {
+    let boardState = JSON.parse(localStorage.getItem("boardState"));
+    boardState[squareId - 1] = boardState[squareId - 1] == true ? false : true;
+    localStorage.setItem("boardState", JSON.stringify(boardState));
+  } else {
+    console.log("boardState null");
+  }
+}
+
 function saveQuestion(question) {
   let currentBoard = JSON.parse(localStorage.getItem("currentBoard"));
   currentBoard.push(question);
   localStorage.setItem("currentBoard", JSON.stringify(currentBoard));
 }
 
-// Checks if user has won through a row
-function checkForWinningRow(buttonSquare) {
-  let bingoSquareId = buttonSquare.id;
+function checkForWinningRow(bingoSquareId) {
   console.log(bingoSquareId);
 
-  let currentBoard = JSON.parse(localStorage.getItem("currentBoard"));
+  let boardState = JSON.parse(localStorage.getItem("boardState"));
 
-  // Check row 1
+  if (boardState) {
+    let row1 = boardState.slice(0, 5);
+    let row2 = boardState.slice(5, 10);
+    let row3 = boardState.slice(10, 15);
+    let row4 = boardState.slice(15, 20);
+    let row5 = boardState.slice(20, 25);
 
+    if (row1.filter(i => i == false).length == 0) return true;
+    if (row2.filter(i => i == false).length == 0) return true;
+    if (row3.filter(i => i == false).length == 0) return true;
+    if (row4.filter(i => i == false).length == 0) return true;
+    if (row5.filter(i => i == false).length == 0) return true;
+  } else {
+    return false;
+  }
+
+  return false;
 }
 
 
