@@ -2,15 +2,15 @@
  * ATTACH EVENT HANDLERS
  */
 
-// Handles Refresh button click
+// Refresh button press
 const refreshButton = document.querySelector("#refresh");
 refreshButton.addEventListener("click", handleRefreshButton);
 
-// Fill Board with classic questions
+// Play Classic board button press
 const classicButton = document.querySelector("#classic-mode");
 classicButton.addEventListener("click", handlePlayClassicBoardButton);
 
-// Save Question to localStorage and Reload Page 
+// Save Question button press
 const questionForm = document.querySelector("#question-form");
 questionForm.addEventListener("submit", handleQuestionFormSubmit);
 
@@ -27,7 +27,6 @@ function handlePlayClassicBoardButton() {
   clearBoard();
 
   localStorage.setItem("currentBoard", "[]");
-  
   for (var i = 0; i < classicBoard.length; i++) {
     saveQuestion(classicBoard[i]);
   }
@@ -50,6 +49,24 @@ function handleQuestionFormSubmit(event) {
     saveQuestion(question.value);
     populateEntireBoard();
   }
+}
+
+function handleClick(event) {
+  let bingoSquare = event.target;
+
+  if (bingoSquare == null) {
+    return;
+  }
+  
+  if (bingoSquare.classList.contains("clicked")) bingoSquare.classList.remove("clicked");
+  else bingoSquare.classList.add("clicked");
+
+  let bingoSquareId = bingoSquare.id.split("-")[1];
+
+
+  checkForWinningRow(bingoSquare);
+  checkForWinningColumn(bingoSquare);
+  checkForWinningDiagonal(bingoSquare);
 }
 
 
@@ -83,24 +100,22 @@ function populateEntireBoard() {
       bingoSquare.addEventListener("click", handleClick);
     }
   }
-
 }
 
-// Handles Bingo Square change when a user clicks 
-function handleClick(event) {
-  // Add or remove a square selection
-  let bingoSquare = event.target;
-  if (bingoSquare.classList.contains("clicked")) {
-    bingoSquare.classList.remove("clicked");
-  } else {
-    bingoSquare.classList.add("clicked");
+function initializeGameState() {
+  if (localStorage.getItem("boardState") == null) {
+    let initialBoardState = JSON.stringify([false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]);
+    localStorage.setItem("boardState", initialBoardStateString);
   }
-
-  checkForWinningRow(bingoSquare);
-  checkForWinningColumn(bingoSquare);
-  checkForWinningDiagonal(bingoSquare);
 }
 
+function getGameState() {
+  if (localStorage.getItem("boardState") != null) {
+    return boardState = JSON.parse(localStorage.getItem("boardState"));
+  } else {
+    return null;
+  }
+}
 
 function saveQuestion(question) {
   let currentBoard = JSON.parse(localStorage.getItem("currentBoard"));
@@ -139,6 +154,7 @@ function checkForWinningDiagonal(buttonSquare) {
  * Beginning of Game play
 */
 window.addEventListener("load", (event) => {
+  initializeGameState();
   populateEntireBoard();
 });
 
