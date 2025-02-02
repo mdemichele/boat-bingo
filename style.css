@@ -100,12 +100,27 @@ body {
 /* Refresh Board Bar */
 .refresh-board-button {
   padding: 10px 30px;
-  background: none;
+  background: red;
   border: 1px solid red;
-  color: red;
+  color: white;
   font-size: 16px;
-  text-transform: uppercase;
   cursor: pointer;
+}
+
+.refresh-board-button:hover {
+  background: rgb(168, 1, 1);
+}
+
+.classic-mode-button {
+  padding: 10px 30px;
+  margin-right: 10px;
+  border: 1px solid white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.classic-mode-button:hover {
+  background: rgb(208, 206, 206);
 }
 
 /* Board Section */
