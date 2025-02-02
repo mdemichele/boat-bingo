@@ -69,12 +69,13 @@ function handleClick(event) {
 
   if (!isGameOver) {
     isGameOver = checkForWinningColumn(bingoSquareId);
-    console.log(isGameOver);
   }
 
   if (!isGameOver) {
     isGameOver = checkForWinningDiagonal(bingoSquareId);
   }
+
+  checkForGameOver(isGameOver);
 
 }
 
@@ -187,11 +188,26 @@ function checkForWinningColumn() {
 }
 
 // Checks if user has won through a diagonal
-function checkForWinningDiagonal(buttonSquare) {
-  console.log("check diagonal");
+function checkForWinningDiagonal() {
+  let board = JSON.parse(localStorage.getItem("boardState"));
+
+  if (board) {
+    let diagonal1 = [board[0], board[6], board[12], board[18], board[24]];
+    let diagonal2 = [board[4], board[8], board[12], board[16], board[20]];
+
+    if (diagonal1.filter(i => i == false).length == 0) return true;
+    if (diagonal2.filter(i => i == false).length == 0) return true;
+  } else {
+    return false;
+  }
+
+  return false;
 }
 
 // Check if game is over 
+function checkForGameOver(isGameOver) {
+  if (isGameOver) alert("You won!");
+}
 
 // Handles Bingos and Blackout 
 
