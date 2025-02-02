@@ -8,18 +8,7 @@ refreshButton.addEventListener("click", handleRefreshButton);
 
 // Fill Board with classic questions
 const classicButton = document.querySelector("#classic-mode");
-classicButton.addEventListener("click", (event) => {
-  // clear board
-  clearBoard();
-
-  localStorage.setItem("currentBoard", "[]");
-
-  for (var i = 0; i < classicBoard.length; i++) {
-    saveQuestion(classicBoard[i]);
-  }
-
-  location.reload();
-});
+classicButton.addEventListener("click", handlePlayClassicBoardButton);
 
 // Save Question to localStorage and Reload Page 
 const questionForm = document.querySelector("#question-form");
@@ -49,6 +38,16 @@ function reloadWindow() {
 
 function handleRefreshButton() {
   clearBoard();
+}
+
+function handlePlayClassicBoardButton() {
+  clearBoard();
+  
+  localStorage.setItem("currentBoard", "[]");
+  
+  for (var i = 0; i < classicBoard.length; i++) {
+    saveQuestion(classicBoard[i]);
+  }
 }
 
 // Handles Bingo Square change when a user clicks 
