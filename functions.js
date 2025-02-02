@@ -20,6 +20,7 @@ questionForm.addEventListener("submit", handleQuestionFormSubmit);
 
 function handleRefreshButton() {
   clearBoard();
+  clearSquareColors();
   populateEntireBoard(); // TODO: should I call this here or should I use a different function for this? 
 }
 
@@ -84,6 +85,13 @@ function handleClick(event) {
 
 function clearBoard() {
   localStorage.clear();
+}
+
+function clearSquareColors() {
+  for (let i = 0; i < 25; i++) {
+    let bingoSquare = document.getElementById("square-" + (i + 1));
+    if (bingoSquare.classList.contains("clicked")) bingoSquare.classList.remove("clicked");
+  }
 }
 
 function reloadWindow() {
@@ -206,7 +214,7 @@ function checkForWinningDiagonal() {
 
 // Check if game is over 
 function checkForGameOver(isGameOver) {
-  if (isGameOver) alert("You won!");
+  if (isGameOver) alert("Bingo!");
 }
 
 // Handles Bingos and Blackout 
