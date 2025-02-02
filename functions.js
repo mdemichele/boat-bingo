@@ -20,6 +20,7 @@ questionForm.addEventListener("submit", handleQuestionFormSubmit);
 
 function handleRefreshButton() {
   clearBoard();
+  populateEntireBoard(); // TODO: should I call this here or should I use a different function for this? 
 }
 
 function handlePlayClassicBoardButton() {
@@ -69,6 +70,14 @@ function populateEntireBoard() {
       let bingoSquare = document.getElementById(squareId);
 
       bingoSquare.innerText = currentBoard[i];
+      bingoSquare.addEventListener("click", handleClick);
+    }
+  } else {
+    for (let i = 0; i < 25; i++) {
+      let squareId = "square-" + (i + 1);
+      let bingoSquare = document.getElementById(squareId);
+
+      bingoSquare.innerText = "";
       bingoSquare.addEventListener("click", handleClick);
     }
   }
