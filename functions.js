@@ -2,7 +2,7 @@
  * EVENT HANDLERS
  */
 
-// Clear Board Function 
+// Handles Refresh button click
 const refreshButton = document.querySelector("#refresh");
 refreshButton.addEventListener("click", handleRefreshButton);
 
