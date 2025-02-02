@@ -49,7 +49,6 @@ function reloadWindow() {
 
 function handleRefreshButton() {
   clearBoard();
-  reloadWindow();
 }
 
 // Handles Bingo Square change when a user clicks 
