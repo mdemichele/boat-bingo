@@ -12,18 +12,7 @@ classicButton.addEventListener("click", handlePlayClassicBoardButton);
 
 // Save Question to localStorage and Reload Page 
 const questionForm = document.querySelector("#question-form");
-questionForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-  // Create currentBoard if first question submission
-  if (localStorage.getItem("currentBoard") == null) {
-    localStorage.setItem("currentBoard", "[]");
-  }
-  
-  // Save question to currentBoard in localStorage
-  saveQuestion(event.target.value);
-
-  location.reload();
-});
+questionForm.addEventListener("submit", handleQuestionFormSubmit);
 
 /**
  * EVENT HANDLERS
@@ -35,11 +24,28 @@ function handleRefreshButton() {
 
 function handlePlayClassicBoardButton() {
   clearBoard();
-  
+
   localStorage.setItem("currentBoard", "[]");
   
   for (var i = 0; i < classicBoard.length; i++) {
     saveQuestion(classicBoard[i]);
+  }
+}
+
+function handleQuestionFormSubmit(event) {
+  event.preventDefault();
+
+  let question = document.getElementById("form-question");
+
+  if (localStorage.getItem("currentBoard") == null) {
+    localStorage.setItem("currentBoard", "[]");
+  }
+
+  if (question.value == null || question.value == "") {
+    alert("No input entered. Please try again.");
+  } else {
+    saveQuestion(question.value);
+    populateEntireBoard();
   }
 }
 
