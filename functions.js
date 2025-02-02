@@ -1,5 +1,5 @@
 /**
- * EVENT HANDLERS
+ * ATTACH EVENT HANDLERS
  */
 
 // Handles Refresh button click
@@ -25,16 +25,9 @@ questionForm.addEventListener("submit", (event) => {
   location.reload();
 });
 
-
-/** FUNCTIONS  */
-
-function clearBoard() {
-  localStorage.clear();
-}
-
-function reloadWindow() {
-  location.reload();
-}
+/**
+ * EVENT HANDLERS
+ */
 
 function handleRefreshButton() {
   clearBoard();
@@ -50,6 +43,32 @@ function handlePlayClassicBoardButton() {
   }
 }
 
+
+/** FUNCTIONS  */
+
+function clearBoard() {
+  localStorage.clear();
+}
+
+function reloadWindow() {
+  location.reload();
+}
+
+function populateEntireBoard() {
+  if (localStorage.getItem("currentBoard") != null) {
+    let currentBoard = JSON.parse(localStorage.getItem("currentBoard"));
+    
+    for (let i = 0; i < currentBoard.length; i++) {
+      let squareId = "square-" + (i + 1);
+      let bingoSquare = document.getElementById(squareId);
+
+      bingoSquare.innerText = currentBoard[i];
+      bingoSquare.addEventListener("click", handleClick);
+    }
+  }
+
+}
+
 // Handles Bingo Square change when a user clicks 
 function handleClick(event) {
   // Add or remove a square selection
@@ -60,10 +79,9 @@ function handleClick(event) {
     bingoSquare.classList.add("clicked");
   }
 
-  // Check for a winning row, column, and diagonal
-  checkForWinningRow(event);
-  checkForWinningColumn(event);
-  checkForWinningDiagonal(event);
+  checkForWinningRow(bingoSquare);
+  checkForWinningColumn(bingoSquare);
+  checkForWinningDiagonal(bingoSquare);
 }
 
 
@@ -74,9 +92,9 @@ function saveQuestion(question) {
 }
 
 // Checks if user has won through a row
-function checkForWinningRow(event) {
-  let bingoSquare = event.target.id;
-  console.log(bingoSquare);
+function checkForWinningRow(buttonSquare) {
+  let bingoSquareId = buttonSquare.id;
+  console.log(bingoSquareId);
 
   let currentBoard = JSON.parse(localStorage.getItem("currentBoard"));
 
@@ -86,12 +104,12 @@ function checkForWinningRow(event) {
 
 
 // Checks if user has won through a column 
-function checkForWinningColumn(event) {
+function checkForWinningColumn(buttonSquare) {
   console.log("check column");
 }
 
 // Checks if user has won through a diagonal
-function checkForWinningDiagonal(event) {
+function checkForWinningDiagonal(buttonSquare) {
   console.log("check diagonal");
 }
 
@@ -104,24 +122,7 @@ function checkForWinningDiagonal(event) {
  * Beginning of Game play
 */
 window.addEventListener("load", (event) => {
-  
-  // Populate bingo squares with questions in localStorage 
-  if (localStorage.getItem("currentBoard") != null) {
-    let currentBoard = JSON.parse(localStorage.getItem("currentBoard"));
-    
-    for (let i = 0; i < currentBoard.length; i++) {
-      // Correct id 
-      let squareId = "square-" + (i + 1);
-      
-      // Get square in dom 
-      let bingoSquare = document.getElementById(squareId);
-      bingoSquare.innerText = currentBoard[i];
-      
-      // Attach event listener to the bingoSquare 
-      bingoSquare.addEventListener("click", handleClick);
-    }
-  }
-
+  populateEntireBoard();
 });
 
 
