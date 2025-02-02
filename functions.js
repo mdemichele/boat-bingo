@@ -30,7 +30,7 @@ function handlePlayClassicBoardButton() {
   for (var i = 0; i < classicBoard.length; i++) {
     saveQuestion(classicBoard[i]);
   }
-  
+
   initializeGameState();
   populateEntireBoard();
 }
@@ -65,11 +65,17 @@ function handleClick(event) {
   let bingoSquareId = bingoSquare.id.split("-")[1];
   addToGameState(bingoSquareId);
 
-  let isWinningRow = checkForWinningRow(bingoSquareId);
-  console.log(isWinningRow);
+  let isGameOver = checkForWinningRow(bingoSquareId);
 
-  checkForWinningColumn(bingoSquareId);
-  checkForWinningDiagonal(bingoSquareId);
+  if (!isGameOver) {
+    isGameOver = checkForWinningColumn(bingoSquareId);
+    console.log(isGameOver);
+  }
+
+  if (!isGameOver) {
+    isGameOver = checkForWinningDiagonal(bingoSquareId);
+  }
+
 }
 
 
@@ -136,9 +142,7 @@ function saveQuestion(question) {
   localStorage.setItem("currentBoard", JSON.stringify(currentBoard));
 }
 
-function checkForWinningRow(bingoSquareId) {
-  console.log(bingoSquareId);
-
+function checkForWinningRow() {
   let boardState = JSON.parse(localStorage.getItem("boardState"));
 
   if (boardState) {
@@ -160,10 +164,26 @@ function checkForWinningRow(bingoSquareId) {
   return false;
 }
 
+function checkForWinningColumn() {
+  let board = JSON.parse(localStorage.getItem("boardState"));
 
-// Checks if user has won through a column 
-function checkForWinningColumn(buttonSquare) {
-  console.log("check column");
+  if (board) {
+    let column1 = [board[0], board[5], board[10], board[15], board[20]];
+    let column2 = [board[1], board[6], board[11], board[16], board[21]];
+    let column3 = [board[2], board[7], board[12], board[17], board[22]];
+    let column4 = [board[3], board[8], board[13], board[18], board[23]];
+    let column5 = [board[4], board[9], board[14], board[19], board[24]];
+
+    if (column1.filter(i => i == false).length == 0) return true;
+    if (column2.filter(i => i == false).length == 0) return true;
+    if (column3.filter(i => i == false).length == 0) return true;
+    if (column4.filter(i => i == false).length == 0) return true;
+    if (column5.filter(i => i == false).length == 0) return true;
+  } else {
+    return false;
+  }
+
+  return false;
 }
 
 // Checks if user has won through a diagonal
