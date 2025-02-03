@@ -195,7 +195,6 @@ function checkForWinningColumn() {
   return false;
 }
 
-// Checks if user has won through a diagonal
 function checkForWinningDiagonal() {
   let board = JSON.parse(localStorage.getItem("boardState"));
 
@@ -212,12 +211,22 @@ function checkForWinningDiagonal() {
   return false;
 }
 
-// Check if game is over 
 function checkForGameOver(isGameOver) {
   if (isGameOver) alert("Bingo!");
 }
 
-// Handles Bingos and Blackout 
+function getGameMode() {
+  return localStorage.getItem("gameMode");
+}
+
+function setGameMode(mode) {
+  localStorage.setItem("gameMode", mode);
+}
+
+function clearGameMode() {
+  localStorage.removeItem("gameMode");
+}
+
 
 /**
  * 01. Load in bingo square questions every time page reloads and attach necessary event listeners  
