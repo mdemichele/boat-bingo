@@ -7,32 +7,34 @@
   </head>
   <body>
     
-    <!-- Title -->
-    <div class="container page-title-container">
-      <h3 class="page-title">Boat Bingo</h3>
-      <p class="page-subtitle">Get 5 stupid questions in a row and you win!</p>
-    </div>
+    <header class="page-header">
+      <!-- Title -->
+      <div class="container page-title-container">
+        <h3 class="page-title">Boat Bingo</h3>
+        <p class="page-subtitle">Get 5 stupid questions in a row and you win!</p>
+      </div>
     
-    <!-- Form -->
-    <div class="container question-form-container">
-      <form id="question-form">
-        <label class="form-label" for="question">Enter your dumbass question</label>
+      <!-- Form -->
+      <div class="container question-form-container">
+        <form id="question-form">
+          <label class="form-label" for="question">Enter your dumbass question</label>
         
-        <div class="form-line">
-          <input id="form-question" class="form-input" type="text" name="question" placeholder="i.e. will we see turtles?"/>
-          <input class="form-submit" type="submit" value="Save Question"/>
-        </div>
-      </form>
-    </div>
+          <div class="form-line">
+            <input id="form-question" class="form-input" type="text" name="question" placeholder="i.e. will we see turtles?"/>
+            <input class="form-submit" type="submit" value="Save Question"/>
+          </div>
+        </form>
+      </div>
     
-    <!-- Refresh bar -->
-    <div class="container refresh-bar-container">
-      <button id="classic-mode" class="classic-mode-button">Play Classic Board</button>
-      <button id="refresh" class="refresh-board-button">Clear Board</button>
-    </div>
+      <!-- Refresh bar -->
+      <div class="container refresh-bar-container">
+        <button id="classic-mode" class="classic-mode-button">Play Classic Board</button>
+        <button id="refresh" class="refresh-board-button">Clear Board</button>
+      </div>
+    </header>
     
     <!-- Board Section -->
-    <div class="container bingo-board-container">
+    <div id="bingo-board" class="container bingo-board-container">
       <!-- Row 1 -->
       <div id="row-1" class="bingo-row">
         <div id="square-1" class="bingo-square"></div>
