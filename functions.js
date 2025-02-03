@@ -14,6 +14,10 @@ classicButton.addEventListener("click", handlePlayClassicBoardButton);
 const questionForm = document.querySelector("#question-form");
 questionForm.addEventListener("submit", handleQuestionFormSubmit);
 
+const gameModeInput = document.getElementsByName("game-mode");
+gameModeInput[0].addEventListener("click", handleGameModeToggle);
+gameModeInput[1].addEventListener("click", handleGameModeToggle);
+
 /**
  * EVENT HANDLERS
  */
@@ -77,7 +81,11 @@ function handleClick(event) {
   }
 
   checkForGameOver(isGameOver);
+}
 
+function handleGameModeToggle(event) {
+  let gameMode = event.target.id;
+  setGameMode(gameMode);
 }
 
 
