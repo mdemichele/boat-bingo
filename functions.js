@@ -71,14 +71,8 @@ function handleClick(event) {
   addToGameState(bingoSquareId);
 
   let isGameOver = checkForWinningRow(bingoSquareId);
-
-  if (!isGameOver) {
-    isGameOver = checkForWinningColumn(bingoSquareId);
-  }
-
-  if (!isGameOver) {
-    isGameOver = checkForWinningDiagonal(bingoSquareId);
-  }
+  if (!isGameOver) isGameOver = checkForWinningColumn(bingoSquareId);
+  if (!isGameOver) isGameOver = checkForWinningDiagonal(bingoSquareId);
 
   checkForGameOver(isGameOver);
 }
