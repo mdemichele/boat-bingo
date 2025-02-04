@@ -219,6 +219,13 @@ function checkForWinningDiagonal() {
   return false;
 }
 
+function checkForBlackout() {
+  let board = JSON.parse(localStorage.getItem("boardState"));
+
+  let isBoardBlackedOut = board.every(square => square === true);
+  return isBoardBlackedOut;
+}
+
 function checkForGameOver(isGameOver) {
   if (isGameOver) alert("Bingo!");
 }
