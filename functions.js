@@ -131,6 +131,8 @@ function initializeGameState() {
   if (localStorage.getItem("boardState") == null) {
     let initialBoardState = JSON.stringify([false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]);
     localStorage.setItem("boardState", initialBoardState);
+  } if (localStorage.getItem("gameMode") == null) {
+    localStorage.setItem("boardState", "bingo-mode");
   }
 }
 
