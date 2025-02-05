@@ -70,10 +70,15 @@ function handleClick(event) {
   let bingoSquareId = bingoSquare.id.split("-")[1];
   addToGameState(bingoSquareId);
 
-  let isGameOver = checkForWinningRow(bingoSquareId);
-  if (!isGameOver) isGameOver = checkForWinningColumn(bingoSquareId);
-  if (!isGameOver) isGameOver = checkForWinningDiagonal(bingoSquareId);
+  let gameMode = localStorage.getItem("gameMode");
+  let isGameOver = false;
 
+  if (gameMode == "bingo-mode") {
+    isGameOver = checkForBingo();
+  } else {
+    isGameOver = checkForBlackout();
+  }
+  
   checkForGameOver(isGameOver);
 }
 
@@ -211,6 +216,13 @@ function checkForWinningDiagonal() {
   }
 
   return false;
+}
+
+function checkForBingo() {
+  let isGameOver = checkForWinningColumn();
+  if (!isGameOver) isGameOver = checkForWinningRow();
+  if (!isGameOver) isGameOver = checkForWinningDiagonal();
+  return isGameOver;
 }
 
 function checkForBlackout() {
