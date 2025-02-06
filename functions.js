@@ -134,11 +134,12 @@ function initializeGameState() {
   } 
   
   if (localStorage.getItem("gameMode") == null) {
-    localStorage.setItem("boardState", "bingo-mode");
+    localStorage.setItem("gameMode", "bingo-mode");
   } else {
-    let gameModeInput = document.getElementsByName("game-mode").checked;
-    console.log("what is the game mode?");
-    console.log(gameModeInput);
+    let currentGameMode = localStorage.getItem("gameMode");
+
+    let gameModeInput = document.getElementById(currentGameMode);
+    gameModeInput.checked = true;
   }
 }
 
