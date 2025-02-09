@@ -25,7 +25,8 @@ gameModeInput[1].addEventListener("click", handleGameModeToggle);
 function handleRefreshButton() {
   clearBoard();
   clearSquareColors();
-  populateEntireBoard(); // TODO: should I call this here or should I use a different function for this? 
+  clearQuestionCount();
+  populateEntireBoard();
 }
 
 function handlePlayClassicBoardButton() {
@@ -54,6 +55,7 @@ function handleQuestionFormSubmit(event) {
   } else {
     saveQuestion(question.value);
     populateEntireBoard();
+    updateQuestionCount(Number(getQuestionCount()) + 1);
   }
 }
 
@@ -88,7 +90,7 @@ function handleGameModeToggle(event) {
 }
 
 
-/** FUNCTIONS  */
+/** GAME STATE FUNCTIONS  */
 
 function clearBoard() {
   localStorage.clear();
@@ -99,6 +101,10 @@ function clearSquareColors() {
     let bingoSquare = document.getElementById("square-" + (i + 1));
     if (bingoSquare.classList.contains("clicked")) bingoSquare.classList.remove("clicked");
   }
+}
+
+function clearQuestionCount() {
+  updateQuestionCount(0);
 }
 
 function reloadWindow() {
@@ -141,6 +147,13 @@ function initializeGameState() {
     let gameModeInput = document.getElementById(currentGameMode);
     gameModeInput.checked = true;
   }
+
+  if (localStorage.getItem("questionCount" == null)) {
+    localStorage.setItem("questionCount", "0");
+  } else {
+    let currentQuestionCount = Number(getQuestionCount());
+    updateQuestionCount(currentQuestionCount);
+  }
 }
 
 function getGameState() {
@@ -167,6 +180,37 @@ function saveQuestion(question) {
   localStorage.setItem("currentBoard", JSON.stringify(currentBoard));
 }
 
+function getGameMode() {
+  return localStorage.getItem("gameMode");
+}
+
+function setGameMode(mode) {
+  localStorage.setItem("gameMode", mode);
+}
+
+function clearGameMode() {
+  localStorage.removeItem("gameMode");
+}
+
+function getQuestionCount() {
+  return localStorage.getItem("questionCount");
+}
+
+function setQuestionCount(count) {
+  console.log(getQuestionCount());
+  return localStorage.setItem("questionCount", count.toString());
+}
+
+function updateQuestionCount(count) {
+  console.log("updateQuestionCount");
+  setQuestionCount(count);
+
+  let questionCountBox = document.getElementById("add-questions");
+  let questionsLeft = 25 - count;
+  questionCountBox.innerText = `${questionsLeft} more questions...`;
+}
+
+/** CHECK WINNERS FUNCTIONS */
 function checkForWinningRow() {
   let boardState = JSON.parse(localStorage.getItem("boardState"));
 
@@ -243,18 +287,6 @@ function checkForBlackout() {
 
 function checkForGameOver(isGameOver) {
   if (isGameOver) alert("Bingo!");
-}
-
-function getGameMode() {
-  return localStorage.getItem("gameMode");
-}
-
-function setGameMode(mode) {
-  localStorage.setItem("gameMode", mode);
-}
-
-function clearGameMode() {
-  localStorage.removeItem("gameMode");
 }
 
 
