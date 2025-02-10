@@ -26,6 +26,7 @@ function handleRefreshButton() {
   clearBoard();
   clearSquareColors();
   clearQuestionCount();
+  updatePlayGame();
   populateEntireBoard();
 }
 
@@ -35,10 +36,12 @@ function handlePlayClassicBoardButton() {
   localStorage.setItem("currentBoard", "[]");
   for (var i = 0; i < classicBoard.length; i++) {
     saveQuestion(classicBoard[i]);
+    setQuestionCount(i + 1);
   }
 
   initializeGameState();
   populateEntireBoard();
+  updatePlayGame();
 }
 
 function handleQuestionFormSubmit(event) {
@@ -197,17 +200,38 @@ function getQuestionCount() {
 }
 
 function setQuestionCount(count) {
-  console.log(getQuestionCount());
   return localStorage.setItem("questionCount", count.toString());
 }
 
 function updateQuestionCount(count) {
-  console.log("updateQuestionCount");
   setQuestionCount(count);
 
   let questionCountBox = document.getElementById("add-questions");
   let questionsLeft = 25 - count;
   questionCountBox.innerText = `${questionsLeft} more questions...`;
+}
+
+function updatePlayGame() {
+  let isReady = isReadyToPlay();
+  let playGameButton = document.getElementById("play-game");
+
+  if (isReady) {
+    if (playGameButton.classList.contains("hidden")) {
+      playGameButton.classList.remove("hidden");
+    } else {
+      playGameButton.classList.add("hidden");
+    }
+  } else {
+    if (!playGameButton.classList.contains("hidden")) {
+      playGameButton.classList.add("hidden");
+    }
+  }
+}
+
+function isReadyToPlay() {
+  if (localStorage.getItem("questionCount") == null) return false;
+  let questionCount = localStorage.getItem("questionCount");
+  return true ? questionCount == 25 : false;
 }
 
 /** CHECK WINNERS FUNCTIONS */
