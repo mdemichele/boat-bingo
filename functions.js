@@ -18,6 +18,10 @@ const gameModeInput = document.getElementsByName("game-mode");
 gameModeInput[0].addEventListener("click", handleGameModeToggle);
 gameModeInput[1].addEventListener("click", handleGameModeToggle);
 
+// Play Game Button press
+const playGameButton = document.getElementById("play-game");
+playGameButton.addEventListener("click", handlePlayGameButtonClick);
+
 /**
  * EVENT HANDLERS
  */
@@ -90,6 +94,10 @@ function handleClick(event) {
 function handleGameModeToggle(event) {
   let gameMode = event.target.id;
   setGameMode(gameMode);
+}
+
+function handlePlayGameButtonClick(event) {
+  document.getElementById("bingo-board").scrollIntoView();
 }
 
 
@@ -208,7 +216,7 @@ function updateQuestionCount(count) {
 
   let questionCountBox = document.getElementById("add-questions");
   let questionsLeft = 25 - count;
-  questionCountBox.innerText = `${questionsLeft} more questions...`;
+  questionCountBox.innerText = `${questionsLeft} more questions needed...`;
 }
 
 function updatePlayGame() {
