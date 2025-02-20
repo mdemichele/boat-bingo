@@ -16,8 +16,8 @@
     
       <!-- Form -->
       <div class="container question-form-container">
-        <form id="question-form">
-          <label class="form-label" for="question">Enter your dumbass question</label>
+        <form id="question-form" name="question-form">
+          <label id="question-form-label" class="form-label" for="form-question">Enter your dumbass question</label>
         
           <div class="form-line">
             <input id="form-question" class="form-input" type="text" name="question" placeholder="i.e. will we see turtles?"/>
@@ -34,14 +34,14 @@
 
       <!-- Game Mode selection -->
       <div class="container game-mode-container">
-        <fieldset>
+        <fieldset id="game-mode-fieldset">
           <legend>Select the game mode</legend>
           <div>
-            <input type="radio" id="bingo-mode" name="game-mode" value="bingo" checked />
+            <input id="bingo-mode" type="radio" name="game-mode" value="bingo" checked />
             <label for="bingo-mode">Bingo</label>
           </div>
           <div>
-            <input type="radio" id="blackout-mode" name="game-mode" value="blackout" />
+            <input id="blackout-mode" type="radio" name="game-mode" value="blackout" />
             <label for="blackout-mode">Blackout</label>
           </div>
         </fieldset>

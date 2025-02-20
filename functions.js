@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * ATTACH EVENT HANDLERS
  */
