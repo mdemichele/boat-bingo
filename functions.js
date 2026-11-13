@@ -1,343 +1,32 @@
 "use strict";
 
+const BOARD_SIZE = 25;
+
 /**
- * ATTACH EVENT HANDLERS
+ * Every way to win in bingo mode, as lists of square indexes (0-24)
  */
-
-// Refresh button press
-const refreshButton = document.querySelector("#refresh");
-refreshButton.addEventListener("click", handleRefreshButton);
-
-// Play Classic board button press
-const classicButton = document.querySelector("#classic-mode");
-classicButton.addEventListener("click", handlePlayClassicBoardButton);
-
-// Save Question button press
-const questionForm = document.querySelector("#question-form");
-questionForm.addEventListener("submit", handleQuestionFormSubmit);
-
-const gameModeInput = document.getElementsByName("game-mode");
-gameModeInput[0].addEventListener("click", handleGameModeToggle);
-gameModeInput[1].addEventListener("click", handleGameModeToggle);
-
-// Play Game Button press
-const playGameButton = document.getElementById("play-game");
-playGameButton.addEventListener("click", handlePlayGameButtonClick);
-
-/**
- * EVENT HANDLERS
- */
-
-function handleRefreshButton() {
-  clearBoard();
-  clearSquareColors();
-  clearQuestionCount();
-  updatePlayGame();
-  populateEntireBoard();
-}
-
-function handlePlayClassicBoardButton() {
-  clearBoard();
-
-  localStorage.setItem("currentBoard", "[]");
-  for (var i = 0; i < classicBoard.length; i++) {
-    saveQuestion(classicBoard[i]);
-    setQuestionCount(i + 1);
-  }
-
-  initializeGameState();
-  populateEntireBoard();
-  updatePlayGame();
-}
-
-function handleQuestionFormSubmit(event) {
-  event.preventDefault();
-
-  let question = document.getElementById("form-question");
-
-  if (localStorage.getItem("currentBoard") == null) {
-    localStorage.setItem("currentBoard", "[]");
-  }
-
-  if (question.value == null || question.value == "") {
-    alert("No input entered. Please try again.");
-  } else {
-    saveQuestion(question.value);
-    populateEntireBoard();
-    updateQuestionCount(Number(getQuestionCount()) + 1);
-  }
-}
-
-function handleClick(event) {
-  let bingoSquare = event.target;
-
-  if (bingoSquare == null) {
-    return;
-  }
-  
-  if (bingoSquare.classList.contains("clicked")) bingoSquare.classList.remove("clicked");
-  else bingoSquare.classList.add("clicked");
-
-  let bingoSquareId = bingoSquare.id.split("-")[1];
-  addToGameState(bingoSquareId);
-
-  let gameMode = localStorage.getItem("gameMode");
-  let isGameOver = false;
-
-  if (gameMode == "bingo-mode") {
-    isGameOver = checkForBingo();
-  } else {
-    isGameOver = checkForBlackout();
-  }
-  
-  checkForGameOver(isGameOver);
-}
-
-function handleGameModeToggle(event) {
-  let gameMode = event.target.id;
-  setGameMode(gameMode);
-}
-
-function handlePlayGameButtonClick(event) {
-  document.getElementById("bingo-board").scrollIntoView();
-}
-
-
-/** GAME STATE FUNCTIONS  */
-
-function clearBoard() {
-  localStorage.clear();
-}
-
-function clearSquareColors() {
-  for (let i = 0; i < 25; i++) {
-    let bingoSquare = document.getElementById("square-" + (i + 1));
-    if (bingoSquare.classList.contains("clicked")) bingoSquare.classList.remove("clicked");
-  }
-}
-
-function clearQuestionCount() {
-  updateQuestionCount(0);
-}
-
-function reloadWindow() {
-  location.reload();
-}
-
-function populateEntireBoard() {
-  if (localStorage.getItem("currentBoard") != null) {
-    let currentBoard = JSON.parse(localStorage.getItem("currentBoard"));
-    
-    for (let i = 0; i < currentBoard.length; i++) {
-      let squareId = "square-" + (i + 1);
-      let bingoSquare = document.getElementById(squareId);
-
-      bingoSquare.innerText = currentBoard[i];
-      bingoSquare.addEventListener("click", handleClick);
-    }
-  } else {
-    for (let i = 0; i < 25; i++) {
-      let squareId = "square-" + (i + 1);
-      let bingoSquare = document.getElementById(squareId);
-
-      bingoSquare.innerText = "";
-      bingoSquare.addEventListener("click", handleClick);
-    }
-  }
-}
-
-function initializeGameState() {
-  if (localStorage.getItem("boardState") == null) {
-    let initialBoardState = JSON.stringify([false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]);
-    localStorage.setItem("boardState", initialBoardState);
-  } 
-  
-  if (localStorage.getItem("gameMode") == null) {
-    localStorage.setItem("gameMode", "bingo-mode");
-  } else {
-    let currentGameMode = localStorage.getItem("gameMode");
-
-    let gameModeInput = document.getElementById(currentGameMode);
-    gameModeInput.checked = true;
-  }
-
-  if (localStorage.getItem("questionCount" == null)) {
-    localStorage.setItem("questionCount", "0");
-  } else {
-    let currentQuestionCount = Number(getQuestionCount());
-    updateQuestionCount(currentQuestionCount);
-  }
-}
-
-function getGameState() {
-  if (localStorage.getItem("boardState") != null) {
-    return boardState = JSON.parse(localStorage.getItem("boardState"));
-  } else {
-    return null;
-  }
-}
-
-function addToGameState(squareId) {
-  if (localStorage.getItem("boardState") != null) {
-    let boardState = JSON.parse(localStorage.getItem("boardState"));
-    boardState[squareId - 1] = boardState[squareId - 1] == true ? false : true;
-    localStorage.setItem("boardState", JSON.stringify(boardState));
-  } else {
-    console.log("boardState null");
-  }
-}
-
-function saveQuestion(question) {
-  let currentBoard = JSON.parse(localStorage.getItem("currentBoard"));
-  currentBoard.push(question);
-  localStorage.setItem("currentBoard", JSON.stringify(currentBoard));
-}
-
-function getGameMode() {
-  return localStorage.getItem("gameMode");
-}
-
-function setGameMode(mode) {
-  localStorage.setItem("gameMode", mode);
-}
-
-function clearGameMode() {
-  localStorage.removeItem("gameMode");
-}
-
-function getQuestionCount() {
-  return localStorage.getItem("questionCount");
-}
-
-function setQuestionCount(count) {
-  return localStorage.setItem("questionCount", count.toString());
-}
-
-function updateQuestionCount(count) {
-  setQuestionCount(count);
-
-  let questionCountBox = document.getElementById("add-questions");
-  let questionsLeft = 25 - count;
-  questionCountBox.innerText = `${questionsLeft} more questions needed...`;
-}
-
-function updatePlayGame() {
-  let isReady = isReadyToPlay();
-  let playGameButton = document.getElementById("play-game");
-
-  if (isReady) {
-    if (playGameButton.classList.contains("hidden")) {
-      playGameButton.classList.remove("hidden");
-    } else {
-      playGameButton.classList.add("hidden");
-    }
-  } else {
-    if (!playGameButton.classList.contains("hidden")) {
-      playGameButton.classList.add("hidden");
-    }
-  }
-}
-
-function isReadyToPlay() {
-  if (localStorage.getItem("questionCount") == null) return false;
-  let questionCount = localStorage.getItem("questionCount");
-  return true ? questionCount == 25 : false;
-}
-
-/** CHECK WINNERS FUNCTIONS */
-function checkForWinningRow() {
-  let boardState = JSON.parse(localStorage.getItem("boardState"));
-
-  if (boardState) {
-    let row1 = boardState.slice(0, 5);
-    let row2 = boardState.slice(5, 10);
-    let row3 = boardState.slice(10, 15);
-    let row4 = boardState.slice(15, 20);
-    let row5 = boardState.slice(20, 25);
-
-    if (row1.filter(i => i == false).length == 0) return true;
-    if (row2.filter(i => i == false).length == 0) return true;
-    if (row3.filter(i => i == false).length == 0) return true;
-    if (row4.filter(i => i == false).length == 0) return true;
-    if (row5.filter(i => i == false).length == 0) return true;
-  } else {
-    return false;
-  }
-
-  return false;
-}
-
-function checkForWinningColumn() {
-  let board = JSON.parse(localStorage.getItem("boardState"));
-
-  if (board) {
-    let column1 = [board[0], board[5], board[10], board[15], board[20]];
-    let column2 = [board[1], board[6], board[11], board[16], board[21]];
-    let column3 = [board[2], board[7], board[12], board[17], board[22]];
-    let column4 = [board[3], board[8], board[13], board[18], board[23]];
-    let column5 = [board[4], board[9], board[14], board[19], board[24]];
-
-    if (column1.filter(i => i == false).length == 0) return true;
-    if (column2.filter(i => i == false).length == 0) return true;
-    if (column3.filter(i => i == false).length == 0) return true;
-    if (column4.filter(i => i == false).length == 0) return true;
-    if (column5.filter(i => i == false).length == 0) return true;
-  } else {
-    return false;
-  }
-
-  return false;
-}
-
-function checkForWinningDiagonal() {
-  let board = JSON.parse(localStorage.getItem("boardState"));
-
-  if (board) {
-    let diagonal1 = [board[0], board[6], board[12], board[18], board[24]];
-    let diagonal2 = [board[4], board[8], board[12], board[16], board[20]];
-
-    if (diagonal1.filter(i => i == false).length == 0) return true;
-    if (diagonal2.filter(i => i == false).length == 0) return true;
-  } else {
-    return false;
-  }
-
-  return false;
-}
-
-function checkForBingo() {
-  let isGameOver = checkForWinningColumn();
-  if (!isGameOver) isGameOver = checkForWinningRow();
-  if (!isGameOver) isGameOver = checkForWinningDiagonal();
-  return isGameOver;
-}
-
-function checkForBlackout() {
-  let board = JSON.parse(localStorage.getItem("boardState"));
-
-  let isBoardBlackedOut = board.every(square => square === true);
-  return isBoardBlackedOut;
-}
-
-function checkForGameOver(isGameOver) {
-  if (isGameOver) alert("Bingo!");
-}
-
-
-/**
- * 01. Load in bingo square questions every time page reloads and attach necessary event listeners  
- * Beginning of Game play
-*/
-window.addEventListener("load", (event) => {
-  initializeGameState();
-  populateEntireBoard();
-});
-
+const WINNING_LINES = [
+  // Rows
+  [0, 1, 2, 3, 4],
+  [5, 6, 7, 8, 9],
+  [10, 11, 12, 13, 14],
+  [15, 16, 17, 18, 19],
+  [20, 21, 22, 23, 24],
+  // Columns
+  [0, 5, 10, 15, 20],
+  [1, 6, 11, 16, 21],
+  [2, 7, 12, 17, 22],
+  [3, 8, 13, 18, 23],
+  [4, 9, 14, 19, 24],
+  // Diagonals
+  [0, 6, 12, 18, 24],
+  [4, 8, 12, 16, 20]
+];
 
 /**
  * Classic mode Board Selections
  */
-let classicBoard = [
+const classicBoard = [
   "Will we see turtles?",
   "What island is that?",
   "Are there sharks?",
@@ -363,5 +52,274 @@ let classicBoard = [
   "Where are we snorkeling today?",
   "*Someone mispronounces Hawaiian word*",
   "*Old person eats shit*"
-]
+];
 
+
+/**
+ * ELEMENTS
+ */
+const boardElement = document.getElementById("bingo-board");
+const questionForm = document.getElementById("question-form");
+const questionInput = document.getElementById("form-question");
+const questionSubmit = questionForm.querySelector("button[type=submit]");
+const formMessage = document.getElementById("form-message");
+const questionCountText = document.getElementById("question-count");
+const progressBar = document.getElementById("progress-bar");
+const undoButton = document.getElementById("undo-question");
+const playGameButton = document.getElementById("play-game");
+const modeBadge = document.getElementById("mode-badge");
+const winDialog = document.getElementById("win-dialog");
+
+
+/**
+ * ATTACH EVENT HANDLERS
+ */
+questionForm.addEventListener("submit", handleQuestionFormSubmit);
+undoButton.addEventListener("click", handleUndoButton);
+document.getElementById("classic-mode").addEventListener("click", handlePlayClassicBoardButton);
+document.getElementById("refresh").addEventListener("click", handleRefreshButton);
+document.getElementById("clear-marks").addEventListener("click", handleClearMarksButton);
+playGameButton.addEventListener("click", handlePlayGameButtonClick);
+winDialog.addEventListener("close", handleWinDialogClose);
+
+for (const input of document.getElementsByName("game-mode")) {
+  input.addEventListener("change", handleGameModeToggle);
+}
+
+// One button per square; a single listener on the board handles all of them
+for (let i = 0; i < BOARD_SIZE; i++) {
+  const square = document.createElement("button");
+  square.type = "button";
+  square.className = "bingo-square";
+  square.dataset.index = i;
+  boardElement.appendChild(square);
+}
+boardElement.addEventListener("click", handleSquareClick);
+
+
+/**
+ * EVENT HANDLERS
+ */
+
+function handleQuestionFormSubmit(event) {
+  event.preventDefault();
+
+  const question = questionInput.value.trim();
+  const questions = getQuestions();
+
+  if (question === "") {
+    showFormMessage("Type a question first.");
+    return;
+  }
+
+  if (questions.length >= BOARD_SIZE) {
+    showFormMessage("The board is full. Clear it to start over.");
+    return;
+  }
+
+  questions.push(question);
+  setQuestions(questions);
+  questionInput.value = "";
+
+  if (questions.length === BOARD_SIZE) {
+    showFormMessage("Board's full. Let's play! 🎉");
+    questionInput.blur();
+  } else {
+    showFormMessage("");
+  }
+
+  render();
+}
+
+function handleUndoButton() {
+  const questions = getQuestions();
+  if (questions.length === 0) return;
+
+  questions.pop();
+  setQuestions(questions);
+
+  // Unmark the square that just lost its question
+  const boardState = getBoardState();
+  boardState[questions.length] = false;
+  setBoardState(boardState);
+
+  showFormMessage("");
+  render();
+}
+
+function handlePlayClassicBoardButton() {
+  if (getQuestions().length > 0 && !confirm("Replace your current board with the classic board?")) {
+    return;
+  }
+
+  setQuestions(classicBoard.slice());
+  clearMarks();
+  showFormMessage("");
+  render();
+}
+
+function handleRefreshButton() {
+  if (getQuestions().length > 0 && !confirm("Clear all questions and marks?")) {
+    return;
+  }
+
+  setQuestions([]);
+  clearMarks();
+  showFormMessage("");
+  render();
+}
+
+function handleClearMarksButton() {
+  clearMarks();
+  render();
+}
+
+function handleGameModeToggle(event) {
+  setGameMode(event.target.value);
+  render();
+}
+
+function handlePlayGameButtonClick() {
+  document.getElementById("board-section").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function handleSquareClick(event) {
+  const square = event.target.closest(".bingo-square");
+  if (square == null || square.disabled) return;
+
+  const index = Number(square.dataset.index);
+  const hadWon = getWinningSquares().length > 0;
+
+  const boardState = getBoardState();
+  boardState[index] = !boardState[index];
+  setBoardState(boardState);
+
+  render();
+
+  // Only celebrate the moment you win, not on every tap afterwards
+  if (!hadWon && getWinningSquares().length > 0) {
+    showWinDialog();
+  }
+}
+
+function handleWinDialogClose() {
+  if (winDialog.returnValue === "new") {
+    clearMarks();
+    render();
+  }
+}
+
+
+/** GAME STATE FUNCTIONS  */
+
+function getQuestions() {
+  return JSON.parse(localStorage.getItem("currentBoard")) || [];
+}
+
+function setQuestions(questions) {
+  localStorage.setItem("currentBoard", JSON.stringify(questions));
+}
+
+function getBoardState() {
+  const boardState = JSON.parse(localStorage.getItem("boardState"));
+  if (Array.isArray(boardState) && boardState.length === BOARD_SIZE) return boardState;
+  return new Array(BOARD_SIZE).fill(false);
+}
+
+function setBoardState(boardState) {
+  localStorage.setItem("boardState", JSON.stringify(boardState));
+}
+
+function clearMarks() {
+  setBoardState(new Array(BOARD_SIZE).fill(false));
+}
+
+function getGameMode() {
+  return localStorage.getItem("gameMode") === "blackout-mode" ? "blackout-mode" : "bingo-mode";
+}
+
+function setGameMode(mode) {
+  localStorage.setItem("gameMode", mode);
+}
+
+function isReadyToPlay() {
+  return getQuestions().length === BOARD_SIZE;
+}
+
+function showFormMessage(message) {
+  formMessage.textContent = message;
+}
+
+
+/** CHECK WINNERS FUNCTIONS */
+
+// Returns the indexes of every square that's part of a win (empty if no win yet)
+function getWinningSquares() {
+  if (!isReadyToPlay()) return [];
+
+  const boardState = getBoardState();
+
+  if (getGameMode() === "blackout-mode") {
+    return boardState.every(marked => marked) ? WINNING_LINES.flat() : [];
+  }
+
+  const winningLines = WINNING_LINES.filter(line => line.every(i => boardState[i]));
+  return winningLines.flat();
+}
+
+function showWinDialog() {
+  const isBlackout = getGameMode() === "blackout-mode";
+
+  document.getElementById("win-title").textContent = isBlackout ? "Blackout!" : "Bingo!";
+  document.getElementById("win-message").textContent = isBlackout
+    ? "Every single question got asked. Somebody get the captain a drink."
+    : "Five dumb questions in a row. You've earned a drink.";
+
+  winDialog.returnValue = "";
+  winDialog.showModal();
+}
+
+
+/** RENDERING */
+
+// Redraws everything on the page from what's saved in localStorage
+function render() {
+  const questions = getQuestions();
+  const boardState = getBoardState();
+  const gameMode = getGameMode();
+  const winningSquares = new Set(getWinningSquares());
+  const questionsLeft = BOARD_SIZE - questions.length;
+  const isFull = questionsLeft === 0;
+
+  // Question count & form
+  questionCountText.textContent = isFull
+    ? "All 25 questions ready ✅"
+    : `${questionsLeft} more question${questionsLeft === 1 ? "" : "s"} to go...`;
+  progressBar.style.width = `${(questions.length / BOARD_SIZE) * 100}%`;
+  undoButton.hidden = questions.length === 0;
+  questionInput.disabled = isFull;
+  questionSubmit.disabled = isFull;
+  playGameButton.hidden = !isFull;
+
+  // Game mode
+  document.getElementById(gameMode).checked = true;
+  modeBadge.textContent = gameMode === "blackout-mode" ? "Blackout" : "Bingo";
+
+  // Squares
+  for (const square of boardElement.children) {
+    const index = Number(square.dataset.index);
+    const question = questions[index];
+
+    square.textContent = question || "?";
+    square.disabled = !question;
+    square.classList.toggle("clicked", Boolean(question) && boardState[index]);
+    square.classList.toggle("winning", winningSquares.has(index));
+    square.setAttribute("aria-pressed", Boolean(question) && boardState[index]);
+  }
+}
+
+
+/**
+ * Beginning of Game play
+ */
+render();
