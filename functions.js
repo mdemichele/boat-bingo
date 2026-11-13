@@ -69,6 +69,11 @@ const undoButton = document.getElementById("undo-question");
 const playGameButton = document.getElementById("play-game");
 const modeBadge = document.getElementById("mode-badge");
 const winDialog = document.getElementById("win-dialog");
+const confirmDialog = document.getElementById("confirm-dialog");
+const confirmButton = document.getElementById("confirm-button");
+
+// What to run if the user hits the confirm button in the confirm popup
+let pendingConfirmAction = null;
 
 
 /**
@@ -81,6 +86,7 @@ document.getElementById("refresh").addEventListener("click", handleRefreshButton
 document.getElementById("clear-marks").addEventListener("click", handleClearMarksButton);
 playGameButton.addEventListener("click", handlePlayGameButtonClick);
 winDialog.addEventListener("close", handleWinDialogClose);
+confirmDialog.addEventListener("close", handleConfirmDialogClose);
 
 for (const input of document.getElementsByName("game-mode")) {
   input.addEventListener("change", handleGameModeToggle);
@@ -148,25 +154,33 @@ function handleUndoButton() {
 }
 
 function handlePlayClassicBoardButton() {
-  if (getQuestions().length > 0 && !confirm("Replace your current board with the classic board?")) {
+  if (getQuestions().length === 0) {
+    loadClassicBoard();
     return;
   }
 
-  setQuestions(classicBoard.slice());
-  clearMarks();
-  showFormMessage("");
-  render();
+  showConfirmDialog({
+    emoji: "🤘",
+    title: "Go Classic?",
+    message: "This replaces your current questions and marks with the classic board.",
+    confirmText: "Load classic",
+    confirmClass: "button-primary"
+  }, loadClassicBoard);
 }
 
 function handleRefreshButton() {
-  if (getQuestions().length > 0 && !confirm("Clear all questions and marks?")) {
+  if (getQuestions().length === 0) {
+    clearBoard();
     return;
   }
 
-  setQuestions([]);
-  clearMarks();
-  showFormMessage("");
-  render();
+  showConfirmDialog({
+    emoji: "🚫",
+    title: "Clear Board?",
+    message: "All your questions and marks will be wiped. This can't be undone.",
+    confirmText: "Clear it",
+    confirmClass: "button-danger"
+  }, clearBoard);
 }
 
 function handleClearMarksButton() {
@@ -209,6 +223,14 @@ function handleWinDialogClose() {
   }
 }
 
+function handleConfirmDialogClose() {
+  // Cancel, Escape, or tapping outside all leave returnValue as something other than "confirm"
+  if (confirmDialog.returnValue === "confirm" && pendingConfirmAction) {
+    pendingConfirmAction();
+  }
+  pendingConfirmAction = null;
+}
+
 
 /** GAME STATE FUNCTIONS  */
 
@@ -232,6 +254,20 @@ function setBoardState(boardState) {
 
 function clearMarks() {
   setBoardState(new Array(BOARD_SIZE).fill(false));
+}
+
+function clearBoard() {
+  setQuestions([]);
+  clearMarks();
+  showFormMessage("");
+  render();
+}
+
+function loadClassicBoard() {
+  setQuestions(classicBoard.slice());
+  clearMarks();
+  showFormMessage("");
+  render();
 }
 
 function getGameMode() {
@@ -273,10 +309,25 @@ function showWinDialog() {
   document.getElementById("win-title").textContent = isBlackout ? "Blackout!" : "Bingo!";
   document.getElementById("win-message").textContent = isBlackout
     ? "Every single question got asked. Somebody get the captain a drink."
-    : "Five dumb questions in a row. You've earned a drink.";
+    : "Congrats, your passengers suck! You've earned a drink.";
 
   winDialog.returnValue = "";
   winDialog.showModal();
+}
+
+/** CONFIRM POPUP */
+
+// Shows the confirm popup and runs onConfirm only if the user confirms
+function showConfirmDialog(options, onConfirm) {
+  document.getElementById("confirm-emoji").textContent = options.emoji;
+  document.getElementById("confirm-title").textContent = options.title;
+  document.getElementById("confirm-message").textContent = options.message;
+  confirmButton.textContent = options.confirmText;
+  confirmButton.className = `button ${options.confirmClass}`;
+
+  pendingConfirmAction = onConfirm;
+  confirmDialog.returnValue = "";
+  confirmDialog.showModal();
 }
 
 

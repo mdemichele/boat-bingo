@@ -84,13 +84,24 @@
     </main>
 
     <!-- Winner popup -->
-    <dialog id="win-dialog" class="win-dialog">
-      <p class="win-emoji" aria-hidden="true">🎉</p>
-      <h2 id="win-title" class="win-title">Bingo!</h2>
-      <p id="win-message" class="win-message"></p>
+    <dialog id="win-dialog" class="popup">
+      <p class="popup-emoji" aria-hidden="true">🎉</p>
+      <h2 id="win-title" class="popup-title">Bingo!</h2>
+      <p id="win-message" class="popup-message"></p>
       <form method="dialog" class="button-row">
         <button class="button button-light" value="keep">Keep playing</button>
         <button class="button button-primary" value="new">New round</button>
+      </form>
+    </dialog>
+
+    <!-- Confirm popup (text is filled in by showConfirmDialog in functions.js) -->
+    <dialog id="confirm-dialog" class="popup">
+      <p id="confirm-emoji" class="popup-emoji" aria-hidden="true"></p>
+      <h2 id="confirm-title" class="popup-title"></h2>
+      <p id="confirm-message" class="popup-message"></p>
+      <form method="dialog" class="button-row">
+        <button class="button button-light" value="cancel">Cancel</button>
+        <button id="confirm-button" class="button" value="confirm"></button>
       </form>
     </dialog>
 

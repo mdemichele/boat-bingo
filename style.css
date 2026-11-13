@@ -403,8 +403,8 @@ input {
   color: var(--navy);
 }
 
-/* Winner popup */
-.win-dialog {
+/* Popups (win + confirm) */
+.popup {
   width: min(90vw, 400px);
   padding: 28px 24px 24px;
   border: none;
@@ -415,23 +415,23 @@ input {
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
 }
 
-.win-dialog[open] {
+.popup[open] {
   animation: pop 0.35s cubic-bezier(0.2, 1.4, 0.4, 1);
 }
 
-.win-dialog::backdrop {
+.popup::backdrop {
   background: rgba(11, 37, 69, 0.7);
   backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
 }
 
-.win-emoji {
+.popup-emoji {
   margin: 0;
   font-size: 56px;
   line-height: 1;
 }
 
-.win-title {
+.popup-title {
   margin: 10px 0 6px;
   font-family: 'Lilita One', 'Lato', sans-serif;
   font-weight: 400;
@@ -439,12 +439,12 @@ input {
   text-transform: uppercase;
 }
 
-.win-message {
+.popup-message {
   margin: 0 0 22px;
   color: #4a5a70;
 }
 
-.win-dialog .button-light {
+.popup .button-light {
   background: var(--foam);
 }
 
